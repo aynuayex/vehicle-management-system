@@ -1,35 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import axios from "axios";
+import { Toaster } from "react-hot-toast";
+import { SignIn, SignUp } from "@clerk/clerk-react";
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
+
+import RootLayout from "./layouts/root-layout";
+import DashboardLayout from "./layouts/dashboard-layout";
+import HomePage from "./routes/home";
+import PatientForm from "./routes/patient-form";
+import DashboardPage, { patientsDataLoader } from "./routes/dashboard";
+import ThemeContextProvider from "@/contexts/theme-context";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<RootLayout />}>
+        <Route index element={<HomePage />} />
+        <Route
+          path="sign-in"
+          element={
+            <div className="flex justify-center">
+              <SignIn />
+            </div>
+          }
+        />
+        <Route
+          path="sign-up"
+          element={
+            <div className="flex justify-center">
+              <SignUp />
+            </div>
+          }
+        />
+        <Route path="dashboard" element={<DashboardLayout />}>
+          <Route
+            index
+            element={<DashboardPage />}
+            loader={patientsDataLoader}
+          />
+          <Route
+            path="patient"
+            element={<PatientForm />}
+            loader={async ({}) => null}
+          />
+          <Route
+            path="patient/:id"
+            element={<PatientForm />}
+            loader={async ({ params }) => {
+              const response = await axios.get(
+                `http://localhost:3000/api/patients/${params.id}`
+              );
+              // console.log(response.data);
+              return response.data;
+            }}
+          />
+        </Route>
+      </Route>
+    )
+  );
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ThemeContextProvider>
+      <RouterProvider router={router} />
+      <Toaster />
+    </ThemeContextProvider>
+  );
 }
 
-export default App
+export default App;

@@ -1,6 +1,18 @@
 import { Request, Response } from "express";
 import Vehicle from "../model/vehicle";
 
+export const getVehicle = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await Vehicle.findById(id).exec();
+    res.status(200).json(result);
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    res.status(500).json({ message: errorMessage });
+  }
+};
+
 export const getAllVehicles = async (_req: Request, res: Response) => {
   try {
     const result = await Vehicle.find();
@@ -14,22 +26,31 @@ export const getAllVehicles = async (_req: Request, res: Response) => {
 
 export const createVehicle = async (req: Request, res: Response) => {
   try {
-    const { name, plateNumber } = req.body;
-    if (!name || !plateNumber) {
-      res.status(400).json({ message: "Name and plate Number are required!" });
-      return ;
+    const { fullName, phoneNumber, status, type, plateNumber } = req.body;
+    if (!fullName || !phoneNumber || !status || !type || !plateNumber) {
+      res.status(400).json({
+        message:
+          "fullName, phoneNumber, status, type, and plate Number are required!",
+      });
+      return;
     }
     const existingVehicle = await Vehicle.findOne({ plateNumber }).exec();
     if (existingVehicle) {
       res
         .status(409)
         .json({ message: "Vehicle Already exists with that Plate number!" });
+      return;
     }
     const result = await Vehicle.create({
-      name,
+      fullName,
+      phoneNumber,
+      type,
+      status,
       plateNumber,
     });
-    res.status(201).json({ success: `New Vehicle ${result.name} created!` });
+    res.status(201).json({
+      success: `New Vehicle ${result.type} with plate no ${plateNumber} created, for ${fullName}!`,
+    });
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred";
@@ -40,22 +61,27 @@ export const createVehicle = async (req: Request, res: Response) => {
 export const updateVehicle = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, status } = req.body;
-    if (!name || !status) {
-      res.status(400).json({ message: "Name and status are required!" });
+    const { fullName, phoneNumber, status, type, plateNumber } = req.body;
+    if (!fullName || !phoneNumber || !status || !type || !plateNumber) {
+      res.status(400).json({
+        message:
+          "fullName, phoneNumber,plateNumber, status and type are required!",
+      });
       return;
     }
     const result = await Vehicle.findByIdAndUpdate(
       id,
-      { name, status },
-      { new: true }, // Return the updated document
+      { fullName, phoneNumber, plateNumber, status, type },
+      { new: true } // Return the updated document
     );
 
     if (!result) {
       res.status(404).json({ message: "Vehicle not found" });
-    } else {
-      res.status(200).json({ success: `Vehicle ${result.name} updated!` });
+      return;
     }
+    res.status(200).json({
+      success: `Vehicle ${result.type} with plate no ${result.plateNumber} updated, for ${fullName}!`,
+    });
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred";
@@ -70,9 +96,11 @@ export const deleteVehicle = async (req: Request, res: Response) => {
 
     if (!result) {
       res.status(404).json({ message: "Vehicle not found" });
-    } else {
-      res.status(200).json({ success: `Vehicle ${result.name} deleted!` });
+      return;
     }
+    res.status(200).json({
+      success: `Vehicle ${result.type} with plate no ${result.plateNumber} deleted, for ${result.fullName}!`,
+    });
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred";

@@ -1,7 +1,6 @@
 import "dotenv/config";
-
 import cors, { type CorsOptions } from "cors";
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 
 import connectDB from "./config/dbConn";
@@ -14,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 // Connect to the database
 connectDB();
 
-const whitelist = ["http://localhost:5173", "http://192.168.8.3:5173"];
+const whitelist = ["http://localhost:5173", "http://192.168.8.73:5173"];
 const corsOptions: CorsOptions = {
   origin(origin, callback) {
     if ((origin && whitelist.indexOf(origin) !== -1) || !origin) {
@@ -24,18 +23,16 @@ const corsOptions: CorsOptions = {
     }
   },
 };
-app.use(cors(corsOptions));
 
-// built in middleware to handle urlencoded data
-// in other words, form data:
-// 'Content-Type: application/x-www-form-urlencoded'
-app.use(express.urlencoded({ extended: false }));
+app.use(cors(corsOptions));
 
 // built in middleware for json
 app.use(express.json());
 
 // routes
-// app.get("/", (req, res) => res.send("vercel backend(NODEJS/EXPRESSJS) deployment successful!"));
+app.get("/", (_req: Request, res: Response) => {
+  res.send("vercel backend(NODEJS/EXPRESSJS) deployment successful!");
+});
 app.use("/api/v1/vehicles", router);
 
 mongoose.connection.once("open", () => {

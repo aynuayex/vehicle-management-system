@@ -21,24 +21,27 @@ import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/ui/data-table";
 import { format } from "date-fns";
 
-export type PatientColumn = {
-  id: string;
+export type VehicleColumn = {
+  _id: string;
   fullName: string;
-  age: string;
-  sex: string;
-  phone: string;
-  email: string;
-  doctor: string;
-  injury: string;
-  dateOfVisit: string;
+  phoneNumber: string;
+  type: string;
+  status: string;
+  plateNumber: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
-export const patientsDataLoader = async () => {
+export const vehiclesDataLoader = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api/patients");
-    return response.data.map((item: PatientColumn) => ({
+    const response = await axios.get(
+      `${import.meta.env.VITE_BASE_API}/api/v1/vehicles`
+    );
+    console.log({ data: response.data });
+    return response.data.map((item: VehicleColumn) => ({
       ...item,
-      dateOfVisit: format(item.dateOfVisit, "MMMM do, yyyy (h:mm a)"),
+      createdAt: format(item.createdAt, "MMMM do, yyyy (h:mm a)"),
+      updatedAt: format(item.updatedAt, "MMMM do, yyyy (h:mm a)"),
     }));
   } catch (err) {
     console.log(err);
@@ -48,17 +51,17 @@ export const patientsDataLoader = async () => {
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
-  const data = useLoaderData() as PatientColumn[];
+  const data = useLoaderData() as VehicleColumn[];
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-1">
         <div className="flex items-center justify-between">
           <Heading
-            title={`Patients List (${data.length})`}
-            description="Manage patients information"
+            title={`Vehicles List (${data.length})`}
+            description="Manage vehicles information"
           />
-          <Button onClick={() => navigate(`/dashboard/patient`)}>
+          <Button onClick={() => navigate(`/dashboard/vehicle`)}>
             <Plus className="mr-2 w-4 h-4" />
             Add New
           </Button>
@@ -72,38 +75,34 @@ const DashboardPage: React.FC = () => {
 
 export default DashboardPage;
 
-const columns: ColumnDef<PatientColumn>[] = [
+const columns: ColumnDef<VehicleColumn>[] = [
   {
     accessorKey: "fullName",
     header: "Full name",
   },
   {
-    accessorKey: "age",
-    header: "Age",
+    accessorKey: "phoneNumber",
+    header: "Phone Number",
   },
   {
-    accessorKey: "sex",
-    header: "Sex",
+    accessorKey: "status",
+    header: "Status",
   },
   {
-    accessorKey: "phone",
-    header: "Phone",
+    accessorKey: "plateNumber",
+    header: "Plate Number",
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "type",
+    header: "Type",
   },
   {
-    accessorKey: "doctor",
-    header: "Doctor",
+    accessorKey: "createdAt",
+    header: "Created At",
   },
   {
-    accessorKey: "injury",
-    header: "Injury/Condition",
-  },
-  {
-    accessorKey: "dateOfVisit",
-    header: "Visit Date",
+    accessorKey: "updatedAt",
+    header: "Updated At",
   },
   {
     id: "actions",
@@ -112,7 +111,7 @@ const columns: ColumnDef<PatientColumn>[] = [
 ];
 
 interface CellActionProps {
-  data: PatientColumn;
+  data: VehicleColumn;
 }
 
 const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -123,10 +122,12 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`http://localhost:3000/api/patients/${data.id}`);
+      await axios.delete(
+        `${import.meta.env.VITE_BASE_API}/api/v1/vehicles/${data._id}`
+      );
       navigate("/dashboard");
-      toast.success("Patient information deleted successfully!");
-    } catch (error) {
+      toast.success("vehicle information deleted successfully!");
+    } catch {
       toast.error("Something went wrong!,please try again");
     } finally {
       setLoading(false);
@@ -153,7 +154,7 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={() => navigate(`/dashboard/patient/${data.id}`)}
+            onClick={() => navigate(`/dashboard/vehicle/${data._id}`)}
           >
             <Edit className="mr-2 w-4 h-4" />
             Update

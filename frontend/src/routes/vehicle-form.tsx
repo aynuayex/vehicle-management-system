@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
-// import { Patient } from "../../../backend/node_modules/@prisma/client";
 import Heading from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -22,65 +21,64 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import AlertModal from "@/components/modals/alert-modal";
-import { PatientColumn } from "./dashboard";
+import { VehicleColumn } from "./dashboard";
 
 const formSchema = z.object({
   fullName: z.string().min(1),
-  sex: z.string().min(1),
-  age: z.string().min(1),
-  phone: z.string().min(1),
-  email: z.string().min(1),
-  doctor: z.string().min(1),
-  injury: z.string().min(1),
+  phoneNumber: z.string().min(1),
+  type: z.string().min(1),
+  status: z.string().min(1),
+  plateNumber: z.string().min(1),
 });
 
-type PatientFormValues = z.infer<typeof formSchema>;
+type VehicleFormValues = z.infer<typeof formSchema>;
 
-const PatientForm: React.FC = () => {
+const VehicleForm: React.FC = () => {
   const navigate = useNavigate();
-  const initialData = useLoaderData() as PatientColumn | null;
+  const initialData = useLoaderData() as VehicleColumn | null;
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const title = initialData
-    ? "Edit patient information"
-    : "Create patient information";
+    ? "Edit vehicle information"
+    : "Create vehicle information";
   const description = initialData
-    ? "Edit a patient information"
-    : "Add a new patient information";
+    ? "Edit a vehicle information"
+    : "Add a new vehicle information";
   const toastMessage = initialData
-    ? "Patient information updated."
-    : "Patient information created.";
+    ? "Vehicle information updated."
+    : "Vehicle information created.";
   const action = initialData ? "Save changes" : "Create";
 
-  const form = useForm<PatientFormValues>({
+  const form = useForm<VehicleFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       fullName: "",
-      sex: "",
-      age: "",
-      phone: "",
-      email: "",
-      doctor: "",
-      injury: "",
+      phoneNumber: "",
+      type: "",
+      status: "",
+      plateNumber: "",
     },
   });
 
-  const onSubmit = async (data: PatientFormValues) => {
+  const onSubmit = async (data: VehicleFormValues) => {
     try {
       setLoading(true);
       if (initialData) {
         await axios.patch(
-          `http://localhost:3000/api/patients/${initialData.id}`,
+          `${import.meta.env.VITE_BASE_API}/api/v1/vehicles/${initialData._id}`,
           data
         );
       } else {
-        await axios.post(`http://localhost:3000/api/patients`, data);
+        await axios.post(
+          `${import.meta.env.VITE_BASE_API}/api/v1/vehicles`,
+          data
+        );
       }
       navigate(`/dashboard`);
       toast.success(toastMessage);
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong!,please try again");
     } finally {
       setLoading(false);
@@ -91,11 +89,11 @@ const PatientForm: React.FC = () => {
     try {
       setLoading(true);
       await axios.delete(
-        `http://localhost:3000/api/patients/${initialData?.id}`
+        `${import.meta.env.VITE_BASE_API}/api/v1/vehicles/${initialData?._id}`
       );
       navigate("/dashboard");
-      toast.success("Patient information deleted successfully!");
-    } catch (error) {
+      toast.success("Vehicle information deleted successfully!");
+    } catch {
       toast.error("Something went wrong!,please try again");
     } finally {
       setLoading(false);
@@ -138,7 +136,7 @@ const PatientForm: React.FC = () => {
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Patient name</FormLabel>
+                  <FormLabel>Full name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
@@ -152,12 +150,16 @@ const PatientForm: React.FC = () => {
             />
             <FormField
               control={form.control}
-              name="sex"
+              name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Sex</FormLabel>
+                  <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="M" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="0953621846"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -165,12 +167,12 @@ const PatientForm: React.FC = () => {
             />
             <FormField
               control={form.control}
-              name="age"
+              name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Age</FormLabel>
+                  <FormLabel>Type</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="30" {...field} />
+                    <Input disabled={loading} placeholder="Toyota" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -178,10 +180,10 @@ const PatientForm: React.FC = () => {
             />
             <FormField
               control={form.control}
-              name="phone"
+              name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone</FormLabel>
+                  <FormLabel>Status</FormLabel>
                   <FormControl>
                     <Input disabled={loading} placeholder="" {...field} />
                   </FormControl>
@@ -191,46 +193,12 @@ const PatientForm: React.FC = () => {
             />
             <FormField
               control={form.control}
-              name="email"
+              name="plateNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Plate Number</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="doctor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Doctor name</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Dr. aklilu "
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="injury"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Injury/Condition</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="allergy"
-                      {...field}
-                    />
+                    <Input disabled={loading} placeholder="" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -251,4 +219,4 @@ const PatientForm: React.FC = () => {
   );
 };
 
-export default PatientForm;
+export default VehicleForm;

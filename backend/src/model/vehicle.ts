@@ -2,7 +2,15 @@ import { model, Schema } from "mongoose";
 
 const vehicleSchema = new Schema(
   {
-    name: {
+    fullName: {
+      type: String,
+      required: true,
+    },
+    phoneNumber: {
+      type: String,
+      required: true
+    },
+    type: {
       type: String,
       required: true,
     },

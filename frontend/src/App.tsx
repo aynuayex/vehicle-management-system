@@ -11,8 +11,8 @@ import {
 import RootLayout from "./layouts/root-layout";
 import DashboardLayout from "./layouts/dashboard-layout";
 import HomePage from "./routes/home";
-import PatientForm from "./routes/patient-form";
-import DashboardPage, { patientsDataLoader } from "./routes/dashboard";
+import VehicleForm from "./routes/vehicle-form";
+import DashboardPage, { vehiclesDataLoader } from "./routes/dashboard";
 import ThemeContextProvider from "@/contexts/theme-context";
 
 function App() {
@@ -40,21 +40,21 @@ function App() {
           <Route
             index
             element={<DashboardPage />}
-            loader={patientsDataLoader}
+            loader={vehiclesDataLoader}
           />
           <Route
-            path="patient"
-            element={<PatientForm />}
-            loader={async ({}) => null}
+            path="vehicle"
+            element={<VehicleForm />}
+            loader={async () => null}
           />
           <Route
-            path="patient/:id"
-            element={<PatientForm />}
+            path="vehicle/:id"
+            element={<VehicleForm />}
             loader={async ({ params }) => {
               const response = await axios.get(
-                `http://localhost:3000/api/patients/${params.id}`
+                `${import.meta.env.VITE_BASE_API}/api/v1/vehicles/${params.id}`
               );
-              // console.log(response.data);
+              console.log(response.data);
               return response.data;
             }}
           />

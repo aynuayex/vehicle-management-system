@@ -22,7 +22,10 @@ const ContactPage = () => {
             <p className="font-semibold mb-2">Phone:</p>
             <div className="flex items-center space-x-2">
               <Phone size={20} />
-              <p>+251900032637</p>
+              <a
+                href="tel:+251900032637"
+                className="text-blue-500 hover:underline"
+              >+251900032637</a>
             </div>
           </div>
           <div>

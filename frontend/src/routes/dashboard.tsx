@@ -49,6 +49,14 @@ export const vehiclesDataLoader = async () => {
   }
 };
 
+// function shouldRevalidate({ actionStatus, defaultShouldRevalidate }) {
+//   if (actionStatus != null && actionStatus >= 400) {
+//     // Revalidate this loader when actions return a 4xx/5xx status
+//     return true;
+//   }
+//   return defaultShouldRevalidate;
+// }
+
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const data = useLoaderData() as VehicleColumn[];

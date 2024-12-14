@@ -1,7 +1,7 @@
 import "dotenv/config";
 import cors from "cors";
 import express, { Express, Request, Response } from "express";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 
 import connectDB from "./config/dbConn";
 import router from "./routes/vehicle";
@@ -36,10 +36,10 @@ app.get("/", (_req: Request, res: Response) => {
 });
 app.use("/api/v1/vehicles", router);
 
-mongoose.connection.once("open", () => {
-  console.log("Connected to MongoDB!");
-  // Start server
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+// mongoose.connection.once("open", () => {
+//   console.log("Connected to MongoDB!");
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
+// });

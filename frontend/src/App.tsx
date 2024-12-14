@@ -63,6 +63,7 @@ function App() {
       {
         future: {
           v7_relativeSplatPath: true,
+          v7_fetcherPersist: true,
         },
       }
     )

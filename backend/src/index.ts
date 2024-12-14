@@ -1,5 +1,5 @@
 import "dotenv/config";
-import cors, { type CorsOptions } from "cors";
+import cors from "cors";
 import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 
@@ -13,18 +13,18 @@ const PORT = process.env.PORT || 3000;
 // Connect to the database
 connectDB();
 
-const whitelist = ["http://localhost:5173", "http://192.168.8.73:5173", "https://vehicle-management-system-frontend.vercel.app"];
-const corsOptions: CorsOptions = {
-  origin(origin, callback) {
-    if ((origin && whitelist.indexOf(origin) !== -1) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
+// const whitelist = ["http://localhost:5173", "http://192.168.8.73:5173", "https://vehicle-management-system-frontend.vercel.app"];
+// const corsOptions: CorsOptions = {
+//   origin(origin, callback) {
+//     if ((origin && whitelist.indexOf(origin) !== -1) || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+// };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 // built in middleware for json
 app.use(express.json());

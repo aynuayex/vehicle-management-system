@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useAuth } from "@clerk/clerk-react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router";
 
 export default function DashboardLayout() {
   const { userId, isLoaded } = useAuth();

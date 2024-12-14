@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router";
 
 import Heading from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";

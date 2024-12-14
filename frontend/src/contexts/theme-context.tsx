@@ -31,7 +31,7 @@ export default function ThemeContextProvider({
   };
 
   useEffect(() => {
-    let localTheme = window.localStorage.getItem("theme") as Theme | null;
+    const localTheme = window.localStorage.getItem("theme") as Theme | null;
     if (localTheme) {
       setTheme(localTheme);
       if (localTheme === "dark") {
@@ -49,6 +49,7 @@ export default function ThemeContextProvider({
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useThemeContext() {
   const context = useContext(ThemeContext);
 

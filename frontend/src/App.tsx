@@ -3,10 +3,10 @@ import { Toaster } from "react-hot-toast";
 import { SignIn, SignUp } from "@clerk/clerk-react";
 import {
   Route,
-  RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
-} from "react-router-dom";
+} from "react-router";
+import { RouterProvider } from "react-router/dom";
 
 import RootLayout from "./layouts/root-layout";
 import DashboardLayout from "./layouts/dashboard-layout";
@@ -64,6 +64,7 @@ function App() {
     {
       future: {
         v7_relativeSplatPath: true,
+        v7_startTransition: true,
         v7_fetcherPersist: true,
         v7_normalizeFormMethod: true,
         v7_partialHydration: true,
@@ -76,9 +77,9 @@ function App() {
     <ThemeContextProvider>
       <RouterProvider
         router={router}
-        future={{
-          v7_startTransition: true,
-        }}
+        // future={{
+        //   v7_startTransition: true,
+        // }}
       />
       <Toaster />
     </ThemeContextProvider>

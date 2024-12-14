@@ -3,7 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { ColumnDef } from "@tanstack/react-table";
 import { Plus, Edit, MoreHorizontal, Trash } from "lucide-react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router";
 
 import {
   DropdownMenu,
@@ -32,6 +32,7 @@ export type VehicleColumn = {
   updatedAt: string;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const vehiclesDataLoader = async () => {
   try {
     const response = await axios.get(

@@ -7,6 +7,7 @@
   --typing-duration: 5s;
   --caret-blink-duration: 0.5s;
 }
+
 @keyframes typing {
   to {
     max-width: calc(var(--steps) * 1ch);

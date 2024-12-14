@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 // Connect to the database
 connectDB();
 
-const whitelist = ["http://localhost:5173", "http://192.168.8.73:5173", "https://vehicle-management-system-tau.vercel.app/"];
+const whitelist = ["http://localhost:5173", "http://192.168.8.73:5173", "https://vehicle-management-system-frontend.vercel.app"];
 const corsOptions: CorsOptions = {
   origin(origin, callback) {
     if ((origin && whitelist.indexOf(origin) !== -1) || !origin) {

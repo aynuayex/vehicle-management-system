@@ -31,7 +31,7 @@ app.use(express.json());
 
 // routes
 app.get("/", (_req: Request, res: Response) => {
-  res.send("vercel backend(NODEJS/EXPRESSJS) deployment successful!");
+  res.send("vercel backend(NODEJS/EXPRESSJS) deployment successful!!");
   return;
 });
 app.use("/api/v1/vehicles", router);

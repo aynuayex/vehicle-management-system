@@ -59,7 +59,12 @@ function App() {
             }}
           />
         </Route>
-      </Route>
+      </Route>,
+      {
+        future: {
+          v7_relativeSplatPath: true,
+        },
+      }
     )
   );
 

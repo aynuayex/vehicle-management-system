@@ -3,6 +3,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import compression from 'compression'
 import routes from './common/routes'
+import requestLogger from './middlewares/requestLogger'
 import unknownEndpoint from './middlewares/unknownEndpoint'
 
 // to use env variables
@@ -30,7 +31,7 @@ app.get('/', (req: Request, res: Response) => {
   })
 })
 
-app.use('/v1/', routes)
+app.use('/api/v1/', requestLogger, routes)
 
 // Handle unknown endpoints
 app.use('*', unknownEndpoint)
